@@ -4,14 +4,13 @@
 GameManager::GameManager(SceneFactory& sceneFactory) : m_sceneFactory(sceneFactory),
 	SCREEN_HEIGHT(600), SCREEN_WIDTH(755)
 {
-	m_sceneRoot = new GameObject(*this);
+	m_sceneRoot.reset(new GameObject(*this));
 }
 
 
 GameManager::~GameManager()
 {
 	Deinit();
-	delete m_sceneRoot;
 }
 
 void GameManager::Init()

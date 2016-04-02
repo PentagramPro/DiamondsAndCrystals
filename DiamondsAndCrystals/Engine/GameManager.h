@@ -2,6 +2,7 @@
 
 #include "ExplainedException.h"
 
+#include <memory>
 #include <unordered_map>
 #include <string>
 #include <SDL.h>
@@ -12,6 +13,7 @@
 
 using std::unordered_map;
 using std::string;
+using std::shared_ptr;
 
 class SceneFactory;
 
@@ -38,7 +40,7 @@ public:
 private:
 	void Deinit();
 
-	GameObject* m_sceneRoot;
+	shared_ptr<GameObject> m_sceneRoot;
 	
 	SDL_Window* m_window;
 	SDL_Renderer* m_renderer;

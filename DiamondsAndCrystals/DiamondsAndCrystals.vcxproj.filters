@@ -36,6 +36,12 @@
     <ClCompile Include="DacSceneFactory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="FieldController.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CrystalController.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Controller.h">
@@ -57,6 +63,12 @@
       <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="DacSceneFactory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FieldController.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CrystalController.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

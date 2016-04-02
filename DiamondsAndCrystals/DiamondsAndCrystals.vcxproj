@@ -117,14 +117,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CrystalController.cpp" />
     <ClCompile Include="DacSceneFactory.cpp" />
     <ClCompile Include="Engine\Controller.cpp" />
     <ClCompile Include="Engine\GameManager.cpp" />
     <ClCompile Include="Engine\GameObject.cpp" />
     <ClCompile Include="Engine\Vector2d.cpp" />
+    <ClCompile Include="FieldController.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CrystalController.h" />
     <ClInclude Include="DacSceneFactory.h" />
     <ClInclude Include="Engine\Controller.h" />
     <ClInclude Include="Engine\ExplainedException.h" />
@@ -132,6 +135,7 @@
     <ClInclude Include="Engine\GameObject.h" />
     <ClInclude Include="Engine\SceneFactory.h" />
     <ClInclude Include="Engine\Vector2d.h" />
+    <ClInclude Include="FieldController.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
