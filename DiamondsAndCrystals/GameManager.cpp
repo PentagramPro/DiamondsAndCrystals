@@ -21,23 +21,46 @@ void GameManager::Init()
 	if (m_window == NULL)
 		throw GameManagerException("SDL_CreateWindow couldn't create window: ", SDL_GetError());
 		
-	m_screenSurface = SDL_GetWindowSurface(m_window);
+	m_renderer = SDL_CreateRenderer(m_window, -1, SDL_RENDERER_ACCELERATED);
+	if(m_renderer == NULL)
+		throw GameManagerException("SDL_CreateRenderer couldn't create renderer: ", SDL_GetError());
 
-	SDL_FillRect(m_screenSurface, NULL, SDL_MapRGB(m_screenSurface->format, 0xFF, 0xFF, 0xFF));
+	SDL_SetRenderDrawColor(m_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
 
-	SDL_UpdateWindowSurface(m_window);
+	int imgFlags = IMG_INIT_PNG;
+	if (!(IMG_Init(imgFlags) & imgFlags))
+		throw GameManagerException("Couldn't initialize png loader: ", IMG_GetError());
+
+
+	m_loopEndTime = SDL_GetTicks();
 }
 
 bool GameManager::Loop()
 {
+	bool quit = false;
+	SDL_Event evnt;
 
-	return true;
+	// SDL_GetTicks wraps after 49 days of running the game, but player will starve to death to that time
+	// I dont use timer events since this game contains only player-dependent actions
+	Uint32 timeDelta = SDL_GetTicks() - m_loopEndTime;
+
+	while (SDL_PollEvent(&evnt) != 0)
+	{
+		if (evnt.type == SDL_QUIT)
+		{
+			quit = true;
+		}
+	}
+
+	m_sceneRoot.Update(timeDelta);
+	m_sceneRoot.Render();
+	return quit;
 }
 
 void GameManager::Deinit()
 {
-	SDL_FreeSurface(m_screenSurface);
-	m_screenSurface = NULL;
+	SDL_DestroyRenderer(m_renderer);
+	m_renderer = NULL;
 
 	SDL_DestroyWindow(m_window);
 	m_window = NULL;

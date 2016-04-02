@@ -3,6 +3,7 @@
 #include "ExplainedException.h"
 #include <SDL.h>
 #include <SDL_image.h>
+#include "GameObject.h"
 
 class GameManagerException : ExplainedException
 {
@@ -22,8 +23,11 @@ public:
 	const int SCREEN_WIDTH, SCREEN_HEIGHT;
 private:
 	void Deinit();
+
+	GameObject m_sceneRoot;
 	
 	SDL_Window* m_window;
-	SDL_Surface* m_screenSurface;
+	SDL_Renderer* m_renderer;
+	Uint32 m_loopEndTime;
 };
 
