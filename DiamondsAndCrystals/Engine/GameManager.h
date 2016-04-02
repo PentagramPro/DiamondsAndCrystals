@@ -1,9 +1,20 @@
 #pragma once
 
 #include "ExplainedException.h"
+
+#include <unordered_map>
+#include <string>
 #include <SDL.h>
 #include <SDL_image.h>
+
 #include "GameObject.h"
+#include "SceneFactory.h"
+
+using std::unordered_map;
+using std::string;
+
+class SceneFactory;
+
 
 class GameManagerException : ExplainedException
 {
@@ -14,20 +25,25 @@ public:
 class GameManager
 {
 public:
-	GameManager();
+	GameManager(SceneFactory& sceneFactory);
 	virtual ~GameManager();
 
 	void Init();
 	
 	bool Loop();
 	const int SCREEN_WIDTH, SCREEN_HEIGHT;
+
+	SDL_Texture* LoadTexture(string assetName);
+	SDL_Renderer* GetRenderer();
 private:
 	void Deinit();
 
-	GameObject m_sceneRoot;
+	GameObject* m_sceneRoot;
 	
 	SDL_Window* m_window;
 	SDL_Renderer* m_renderer;
 	Uint32 m_loopEndTime;
+	SceneFactory& m_sceneFactory;
+	unordered_map<string, SDL_Texture*> m_textures;
 };
 

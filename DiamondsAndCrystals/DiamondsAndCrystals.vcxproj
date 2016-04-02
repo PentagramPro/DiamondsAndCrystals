@@ -79,7 +79,7 @@
       <SDLCheck>true</SDLCheck>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Console</SubSystem>
     </Link>
   </ItemDefinitionGroup>
@@ -117,18 +117,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Controller.cpp" />
-    <ClCompile Include="GameManager.cpp" />
-    <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="DacSceneFactory.cpp" />
+    <ClCompile Include="Engine\Controller.cpp" />
+    <ClCompile Include="Engine\GameManager.cpp" />
+    <ClCompile Include="Engine\GameObject.cpp" />
+    <ClCompile Include="Engine\Vector2d.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Vector2d.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Controller.h" />
-    <ClInclude Include="ExplainedException.h" />
-    <ClInclude Include="GameManager.h" />
-    <ClInclude Include="GameObject.h" />
-    <ClInclude Include="Vector2d.h" />
+    <ClInclude Include="DacSceneFactory.h" />
+    <ClInclude Include="Engine\Controller.h" />
+    <ClInclude Include="Engine\ExplainedException.h" />
+    <ClInclude Include="Engine\GameManager.h" />
+    <ClInclude Include="Engine\GameObject.h" />
+    <ClInclude Include="Engine\SceneFactory.h" />
+    <ClInclude Include="Engine\Vector2d.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

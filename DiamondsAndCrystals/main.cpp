@@ -1,37 +1,28 @@
 #include <exception>
 #include <stdio.h>
 
-#include "GameManager.h"
-
+#include "Engine\GameManager.h"
+#include "DacSceneFactory.h"
 
 
 int main(int argc, char* args[])
 {
 	
-	
 	try {
-		GameManager manager;
+		DacSceneFactory factory;
+
+		GameManager manager(factory);
 
 		manager.Init();
 
-		while (!manager.Loop())
-		{
-
-		}
-
-
+		while (!manager.Loop())	{}
 	}
 	catch (std::exception& e)
 	{
 		printf("There was a problem running GameManager!\nException: %s\n", e.what());
 	}
 
-	
 
-	
-	
-
-	
 
 	return 0;
 }
