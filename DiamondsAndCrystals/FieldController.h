@@ -7,6 +7,7 @@
 #define FIELD_SIZE_X 8
 #define FIELD_SIZE_Y 8
 #define FALL_SHIFT 200
+#define DRAG_DISTANCE 15
 
 using std::weak_ptr;
 class CrystalController;
@@ -42,9 +43,10 @@ protected:
 
 	void SwapCells(weak_ptr<CrystalController> cell1, weak_ptr<CrystalController> cell2);
 	int TestField();
+	inline bool Adjacent(int x1, int y1, int x2, int y2);
 
 	States m_state;
-
+	
 	weak_ptr<CrystalController> m_swapped1, m_swapped2;
 
 };

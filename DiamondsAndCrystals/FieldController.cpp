@@ -18,6 +18,7 @@ FieldController::~FieldController()
 void FieldController::Init()
 {
 	m_state = States::Paused;
+	
 	for (int cellX = 0; cellX < FIELD_SIZE_X; cellX++)
 	{
 		for (int cellY = 0; cellY < FIELD_SIZE_Y; cellY++)
@@ -43,15 +44,19 @@ void FieldController::Update(Uint32 timeDelta)
 
 	Vector2d mp(Manager().m_mouseX, Manager().m_mouseY);
 	
+	
+
 	switch (m_state)
 	{
 	case States::PauseDelay:
 		m_state = States::Idle;
 		break;
 	case States::Idle:
-		if (Manager().m_mouseLeft == MB_UP && (cellX >= 0 && cellY >= 0 && cellX < FIELD_SIZE_X && cellY < FIELD_SIZE_Y))
+		if ((cellX >= 0 && cellY >= 0 && cellX < FIELD_SIZE_X && cellY < FIELD_SIZE_Y))
 		{
+			
 			FsaIdleMouse(cellX, cellY);
+			
 		}
 		break;
 	case States::Swap:
@@ -88,20 +93,51 @@ void FieldController::EndGame()
 
 void FieldController::FsaIdleMouse(int cellX, int cellY)
 {
-	auto picked = m_pickedCell.lock();
+	Vector2d mp(Manager().m_mouseX, Manager().m_mouseY);
+	Vector2d gesture = mp - Manager().m_mouseLeftDownPoint;
 
-	// this is basically an a AND (b XOR c) equation
-	if (picked &&
-		((abs(picked->m_cellX - cellX) == 1) != (abs(picked->m_cellY - cellY) == 1)))
+	if (Manager().m_mouseLeft != MB_NONE && gesture.Magnitude() > DRAG_DISTANCE)
 	{
-		SwapCells(m_cells[cellY][cellX], m_pickedCell);
-		m_pickedCell.reset();
-		m_state = States::Swap;
+		int cellXOld = (Manager().m_mouseLeftDownPoint.x - Object()->m_localPosition.x) / CRYSTAL_SIZE;
+		int cellYOld = (Manager().m_mouseLeftDownPoint.y - Object()->m_localPosition.y) / CRYSTAL_SIZE;
+		if (Adjacent(cellX, cellY, cellXOld, cellYOld))
+		{
+			SwapCells(m_cells[cellY][cellX], m_cells[cellYOld][cellXOld]);
+			m_pickedCell.reset();
+			m_state = States::Swap;
+		}
 	}
-	else
+	else if (Manager().m_mouseLeft == MB_UP && gesture.Magnitude()<DRAG_DISTANCE)
 	{
-		m_pickedCell = m_cells[cellY][cellX];
-		printf("picked cell x:%d y:%d\n", cellX, cellY);
+		auto picked = m_pickedCell.lock();
+
+		
+
+		//if (gesture.Magnitude() < DRAG_DISTANCE)
+		//{
+			// We deem that user tried to click on crystals
+
+			
+		if (picked &&Adjacent(cellX,cellY,picked->m_cellX, picked->m_cellY))
+		{
+			SwapCells(m_cells[cellY][cellX], m_pickedCell);
+			m_pickedCell.reset();
+			m_state = States::Swap;
+		}
+		else
+		{
+			m_pickedCell = m_cells[cellY][cellX];
+			printf("picked cell x:%d y:%d\n", cellX, cellY);
+		}
+
+		//}
+
+		/*else
+		{
+
+			float angle = atan2f(gesture.y, gesture.x)*180/M_PI;
+			if(angle<45 && angle>-45)
+		}*/
 	}
 }
 
@@ -255,5 +291,11 @@ int FieldController::TestField()
 	m_gameController.lock()->AddScore(toRemove.size());
 	return toRemove.size();
 
+}
+
+bool FieldController::Adjacent(int x1, int y1, int x2, int y2)
+{
+	// this is basically an a AND (b XOR c) equation
+	return (abs(x1 - x2) == 1 && y1 == y2) != (abs(y1 - y2) == 1 && x1 == x2);
 }
 

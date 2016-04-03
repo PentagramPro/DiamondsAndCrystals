@@ -47,6 +47,7 @@ public:
 
 	int m_mouseX, m_mouseY;
 	int m_mouseLeft, m_mouseRight;
+	Vector2d m_mouseLeftDownPoint;
 private:
 	void Deinit();
 

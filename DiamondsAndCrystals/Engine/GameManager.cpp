@@ -57,6 +57,13 @@ bool GameManager::Loop()
 	m_mouseLeft = MouseState(m_mouseLeft, mouseButtons & SDL_BUTTON(SDL_BUTTON_LEFT));
 	m_mouseRight = MouseState(m_mouseLeft, mouseButtons & SDL_BUTTON(SDL_BUTTON_RIGHT));
 	
+	if (m_mouseLeft == MB_DOWN)
+	{
+		m_mouseLeftDownPoint.x = m_mouseX;
+		m_mouseLeftDownPoint.y = m_mouseY;
+	}
+	
+
 	while (SDL_PollEvent(&evnt) != 0)
 	{
 		switch (evnt.type)
