@@ -24,9 +24,24 @@ void CrystalController::Init()
 void CrystalController::Update(Uint32 timeDelta)
 {
 	Vector2d origin = Origin();
-	if (Object()->m_localPosition.y < origin.y - 0.1)
+	Vector2d shift = origin - Object()->m_localPosition;
+	float dist = shift.Magnitude();
+	
+	if ( dist > 0.1)
 	{
-		Object()->m_localPosition.y += FALL_SPEED*((float)timeDelta)/1000.0;
+		shift.Normalize();
+		shift *= (m_fallSpeed*((float)timeDelta) / 1000.0);
+		m_fallSpeed += FALL_ACC*(float)timeDelta/1000.0;
+
+		if (shift.Magnitude() > dist)
+			Object()->m_localPosition = origin;
+		else
+			Object()->m_localPosition +=  shift;
+		m_field.lock()->m_movingCrystals++;
+	}
+	else
+	{
+		m_fallSpeed = FALL_SPEED;
 	}
 }
 

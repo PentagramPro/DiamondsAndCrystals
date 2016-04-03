@@ -17,6 +17,7 @@ FieldController::~FieldController()
 
 void FieldController::Init()
 {
+	m_state = States::Idle;
 	for (int cellX = 0; cellX < FIELD_SIZE_X; cellX++)
 	{
 		for (int cellY = 0; cellY < FIELD_SIZE_Y; cellY++)
@@ -25,7 +26,9 @@ void FieldController::Init()
 
 			crystal->m_cellX = cellX;
 			crystal->m_cellY = cellY;
-
+			
+			
+			crystal->m_field = dynamic_pointer_cast<FieldController>(shared_from_this());
 			m_cells[cellY][cellX] = crystal;
 			Object()->CreateObject("Crystal", 0, 0, NULL,crystal);
 			
@@ -39,37 +42,84 @@ void FieldController::Update(Uint32 timeDelta)
 	int cellY = (Manager().m_mouseY - Object()->m_localPosition.y) / CRYSTAL_SIZE;
 
 	Vector2d mp(Manager().m_mouseX, Manager().m_mouseY);
-
-
-	if (Manager().m_mouseLeft == MB_UP)
+	
+	switch (m_state)
 	{
-		if (cellX >= 0 && cellY >= 0 && cellX < FIELD_SIZE_X && cellY < FIELD_SIZE_Y)
+	case States::Idle:
+		if (Manager().m_mouseLeft == MB_UP && (cellX >= 0 && cellY >= 0 && cellX < FIELD_SIZE_X && cellY < FIELD_SIZE_Y))
 		{
-			
-			auto picked = m_pickedCell.lock();
-
-			// this is basically an a AND (b XOR c) equation
-			if (picked &&
-				((abs(picked->m_cellX - cellX) == 1) != (abs(picked->m_cellY - cellY) == 1)))
-			{
-				SwapCells(m_cells[cellY][cellX], m_pickedCell);
-				m_pickedCell.reset();
-			}
-			else
-			{
-				m_pickedCell = m_cells[cellY][cellX];
-				printf("picked cell x:%d y:%d\n", cellX, cellY);
-			}
+			FsaIdleMouse(cellX, cellY);
 		}
+		break;
+	case States::Swap:
+		if (m_movingCrystals == 0)
+			FsaSwapped();
+		break;
+	case States::SwapBack:
+		if (m_movingCrystals == 0)
+			m_state = States::Idle;
+	case States::Fall:
+		if (m_movingCrystals == 0)
+			FsaFallStopped();
+		break;
+
 	}
+
+	m_movingCrystals = 0;
+
 
 	
 
 	
 }
 
+void FieldController::FsaIdleMouse(int cellX, int cellY)
+{
+	auto picked = m_pickedCell.lock();
+
+	// this is basically an a AND (b XOR c) equation
+	if (picked &&
+		((abs(picked->m_cellX - cellX) == 1) != (abs(picked->m_cellY - cellY) == 1)))
+	{
+		SwapCells(m_cells[cellY][cellX], m_pickedCell);
+		m_pickedCell.reset();
+		m_state = States::Swap;
+	}
+	else
+	{
+		m_pickedCell = m_cells[cellY][cellX];
+		printf("picked cell x:%d y:%d\n", cellX, cellY);
+	}
+}
+
+void FieldController::FsaSwapped()
+{
+	int removed = TestField();
+	if (removed > 0)
+	{
+		m_state = States::Fall;
+	}
+	else
+	{
+		SwapCells(m_swapped1, m_swapped2);
+		m_state = States::SwapBack;
+	}
+}
+
+void FieldController::FsaFallStopped()
+{
+	int removed = TestField();
+	if (removed == 0)
+	{
+		m_state = States::Idle;
+	}
+}
+
 void FieldController::SwapCells(weak_ptr<CrystalController> wcell1, weak_ptr<CrystalController> wcell2)
 {
+	m_swapped1 = wcell1;
+	m_swapped2 = wcell2;
+
 	auto cell1 = wcell1.lock();
 	auto cell2 = wcell2.lock();
 
@@ -85,13 +135,13 @@ void FieldController::SwapCells(weak_ptr<CrystalController> wcell1, weak_ptr<Cry
 	cell2->m_cellX = x;
 	cell2->m_cellY = y;
 
-	cell1->Object()->m_localPosition = cell1->Origin();
-	cell2->Object()->m_localPosition = cell2->Origin();
+	//cell1->Object()->m_localPosition = cell1->Origin();
+	//cell2->Object()->m_localPosition = cell2->Origin();
 
 	m_cells[cell1->m_cellY][cell1->m_cellX] = wcell1;
 	m_cells[cell2->m_cellY][cell2->m_cellX] = wcell2;
 
-	TestField();
+	//TestField();
 }
 
 int FieldController::TestField()
