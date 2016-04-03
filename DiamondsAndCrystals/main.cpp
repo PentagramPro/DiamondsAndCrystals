@@ -17,6 +17,11 @@ int main(int argc, char* args[])
 
 		while (!manager.Loop())	{}
 	}
+	catch (GameManagerException& e)
+	{
+		printf("There was a problem running GameManager!\nException: %s\n", e.what());
+		getchar();
+	}
 	catch (std::exception& e)
 	{
 		printf("There was a problem running GameManager!\nException: %s\n", e.what());

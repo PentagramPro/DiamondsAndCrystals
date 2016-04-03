@@ -7,6 +7,7 @@
 #include "Vector2d.h"
 #include "Controller.h"
 #include "GameManager.h"
+#include "Renderer.h"
 
 using std::string;
 using std::list;
@@ -26,7 +27,8 @@ public:
 	void Render();
 
 	GameObject& CreateObject(const char* name, float x, float y, const char* textureAsset, shared_ptr<Controller>  controller);
-	
+	GameObject& CreateObject(const char* name, float x, float y, int sizeX, int sizeY, shared_ptr<Renderer> renderer,
+		shared_ptr<Controller>  controller);
 	Vector2d m_localPosition;
 
 	shared_ptr<GameObject> GetSharedPtr();
@@ -36,9 +38,12 @@ public:
 	GameManager& Manager() { return m_manager; }
 
 	bool IsMouseInside();
+	void SetEnabled(bool isEnabled);
 private:
 	GameObject(GameManager& manager);
 	GameObject(const char* name, float x, float y, int sizeX, int sizeY, GameManager& manager);
+
+
 
 	Vector2d m_globalPosition;
 	list<shared_ptr<GameObject>> m_children;
@@ -47,7 +52,8 @@ private:
 	string m_name;
 	SDL_Rect m_rect;
 	shared_ptr<Controller> m_controller;
-	SDL_Texture* m_texture;
+	shared_ptr<Renderer> m_renderer;
 	GameManager& m_manager;
+	bool m_enabled;
 };
 

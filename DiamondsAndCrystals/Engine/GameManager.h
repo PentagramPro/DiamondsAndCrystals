@@ -4,8 +4,10 @@
 
 #include <memory>
 #include <unordered_map>
+#include <map>
 #include <string>
 #include <SDL.h>
+#include <SDL_ttf.h>
 #include <SDL_image.h>
 
 #include "GameObject.h"
@@ -13,13 +15,15 @@
 #include "Constants.h"
 
 using std::unordered_map;
+using std::map;
 using std::string;
 using std::shared_ptr;
+using std::pair;
 
 class SceneFactory;
 
 
-class GameManagerException : ExplainedException
+class GameManagerException : public ExplainedException
 {
 public:
 	GameManagerException(const char* what, const char* details) : ExplainedException(what, details) {}
@@ -37,6 +41,8 @@ public:
 	const int SCREEN_WIDTH, SCREEN_HEIGHT;
 
 	SDL_Texture* LoadTexture(string assetName);
+	TTF_Font* LoadFont(string assetName, int size);
+
 	SDL_Renderer* GetRenderer();
 
 	int m_mouseX, m_mouseY;
@@ -51,6 +57,7 @@ private:
 	Uint32 m_loopEndTime;
 	SceneFactory& m_sceneFactory;
 	unordered_map<string, SDL_Texture*> m_textures;
+	map<pair<string,int>, TTF_Font *> m_fonts;
 
 	inline int MouseState(int curFromGm, int curFromSdl);
 };

@@ -1,6 +1,7 @@
 #include "GameObject.h"
 
 
+#include "TextureRenderer.h"
 
 
 
@@ -12,7 +13,7 @@ GameObject::GameObject(GameManager& manager) : m_manager(manager),
 {
 	memset(&m_rect, 0, sizeof(m_rect));
 	m_parent = NULL;
-	m_texture = NULL;
+	m_enabled = true;
 }
 
 GameObject::GameObject(const char*  name, float x, float y, int sizeX, int sizeY, GameManager& manager) : m_manager(manager),
@@ -23,9 +24,10 @@ m_name(name), m_localPosition(x,y), m_globalPosition(0,0)
 	m_rect.h = sizeY;
 	m_rect.w = sizeX;
 	m_parent = NULL;
-	m_texture = NULL;
-		
+	
+	m_enabled = true;
 }
+
 
 
 GameObject::~GameObject()
@@ -35,6 +37,8 @@ GameObject::~GameObject()
 void GameObject::Update(Uint32 timeDelta)
 {
 	
+	if (!m_enabled)
+		return;
 
 	if (m_controller.get() != NULL)
 		m_controller->Update(timeDelta);
@@ -52,11 +56,13 @@ void GameObject::Update(Uint32 timeDelta)
 void GameObject::Render()
 {
 	
-	
+	if (!m_enabled)
+		return;
 
 	// potential place for matrix transformations
-	if (m_texture != NULL)
-		SDL_RenderCopy(m_manager.GetRenderer(), m_texture, NULL, &m_rect);
+	if (m_renderer.get() != NULL)
+		m_renderer->Render(m_manager.GetRenderer(), &m_rect);
+		
 
 	for (auto& item : m_children)
 		item->Render();
@@ -69,8 +75,15 @@ shared_ptr<GameObject> GameObject::GetSharedPtr()
 
 void GameObject::SetTexture(string assetName)
 {
-	m_texture = m_manager.LoadTexture(assetName);
-	SDL_QueryTexture(m_texture, NULL, NULL, &m_rect.w, &m_rect.h);
+	// we initialising shared pointer
+	m_renderer.reset(new TextureRenderer());
+
+	// and then setting texture to protect memory in case of exception
+	SDL_Texture* texture = m_manager.LoadTexture(assetName);
+	((TextureRenderer*)m_renderer.get())->SetTexture(texture);
+
+
+	SDL_QueryTexture(texture, NULL, NULL, &m_rect.w, &m_rect.h);
 
 }
 
@@ -92,6 +105,11 @@ bool GameObject::IsMouseInside()
 
 }
 
+void GameObject::SetEnabled(bool isEnabled)
+{
+	m_enabled = isEnabled;
+}
+
 GameObject & GameObject::CreateObject(const char* name, float x, float y, const char* textureAsset, shared_ptr<Controller> controller)
 {
 	shared_ptr<GameObject> res(new GameObject(name, x, y, 0, 0, m_manager));
@@ -111,3 +129,21 @@ GameObject & GameObject::CreateObject(const char* name, float x, float y, const 
 
 	return *res;
 }
+
+GameObject & GameObject::CreateObject(const char * name, float x, float y, int sizeX, int sizeY, shared_ptr<Renderer> renderer, shared_ptr<Controller> controller)
+{
+	shared_ptr<GameObject> res(new GameObject(name, x, y, sizeX, sizeY, m_manager));
+
+	res->m_renderer = renderer;
+	if (controller != NULL)
+	{
+		controller->m_owner = res;
+		controller->Init();
+	}
+	res->m_controller = controller;
+	res->m_parent = GetSharedPtr();
+	m_children.push_back(res);
+	return *res;
+}
+
+

@@ -33,6 +33,10 @@ void GameManager::Init()
 	if (!(IMG_Init(imgFlags) & imgFlags))
 		throw GameManagerException("Couldn't initialize png loader: ", IMG_GetError());
 
+	if (TTF_Init() == -1)
+		throw GameManagerException("Couldn't initialize ttf library: ", TTF_GetError());
+		
+
 	m_sceneFactory.CreateScene(*this, *m_sceneRoot);
 
 	m_loopEndTime = SDL_GetTicks();
@@ -91,6 +95,22 @@ SDL_Texture * GameManager::LoadTexture(string assetName)
 	
 	m_textures[assetName] = texture;
 	return texture;
+}
+
+TTF_Font * GameManager::LoadFont(string assetName, int size)
+{
+	pair<string, int> p(assetName, size);
+	if (m_fonts.count(p) > 0)
+		return m_fonts[p];
+
+	TTF_Font* loadedFont = TTF_OpenFont(("Assets\\" + assetName).c_str(), size);
+	if (loadedFont == NULL)
+		throw GameManagerException(("Cannot load font " + assetName + ": ").c_str(), SDL_GetError());
+	
+
+
+	m_fonts[p] = loadedFont;
+	return loadedFont;
 }
 
 SDL_Renderer * GameManager::GetRenderer()

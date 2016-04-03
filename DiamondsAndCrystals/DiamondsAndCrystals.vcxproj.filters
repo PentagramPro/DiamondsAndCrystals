@@ -16,6 +16,9 @@
     <Filter Include="Engine">
       <UniqueIdentifier>{fd79b0a0-c9e0-41da-a6de-2db43caa6650}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Renderers">
+      <UniqueIdentifier>{df515c92-6f48-4212-aad3-eb1a90105ac8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -40,6 +43,21 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="CrystalController.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\SolidRenderer.cpp">
+      <Filter>Engine\Renderers</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\TextRenderer.cpp">
+      <Filter>Engine\Renderers</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\TextureRenderer.cpp">
+      <Filter>Engine\Renderers</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Renderer.cpp">
+      <Filter>Engine\Renderers</Filter>
+    </ClCompile>
+    <ClCompile Include="GameController.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -74,5 +92,28 @@
     <ClInclude Include="Engine\Constants.h">
       <Filter>Engine</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\SolidRenderer.h">
+      <Filter>Engine\Renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\TextRenderer.h">
+      <Filter>Engine\Renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\TextureRenderer.h">
+      <Filter>Engine\Renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Renderer.h">
+      <Filter>Engine\Renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="GameController.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="DiamondsAndCrystals.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

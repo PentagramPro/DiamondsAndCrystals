@@ -17,7 +17,7 @@ FieldController::~FieldController()
 
 void FieldController::Init()
 {
-	m_state = States::Idle;
+	m_state = States::Paused;
 	for (int cellX = 0; cellX < FIELD_SIZE_X; cellX++)
 	{
 		for (int cellY = 0; cellY < FIELD_SIZE_Y; cellY++)
@@ -45,6 +45,9 @@ void FieldController::Update(Uint32 timeDelta)
 	
 	switch (m_state)
 	{
+	case States::PauseDelay:
+		m_state = States::Idle;
+		break;
 	case States::Idle:
 		if (Manager().m_mouseLeft == MB_UP && (cellX >= 0 && cellY >= 0 && cellX < FIELD_SIZE_X && cellY < FIELD_SIZE_Y))
 		{
@@ -71,6 +74,16 @@ void FieldController::Update(Uint32 timeDelta)
 	
 
 	
+}
+
+void FieldController::StartNewGame()
+{
+	m_state = States::PauseDelay;
+}
+
+void FieldController::EndGame()
+{
+	m_state = States::Paused;
 }
 
 void FieldController::FsaIdleMouse(int cellX, int cellY)
@@ -239,7 +252,8 @@ int FieldController::TestField()
 		}
 	}
 
-
+	m_gameController.lock()->AddScore(toRemove.size());
 	return toRemove.size();
 
 }
+

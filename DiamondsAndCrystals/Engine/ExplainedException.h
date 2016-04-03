@@ -2,7 +2,7 @@
 #include <exception>
 #include <string>
 
-class ExplainedException : std::exception
+class ExplainedException : public std::exception
 {
 public:
 	ExplainedException(const char* whatHappened) : m_message(whatHappened)	{	}

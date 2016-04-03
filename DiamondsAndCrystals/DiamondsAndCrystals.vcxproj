@@ -79,7 +79,7 @@
       <SDLCheck>true</SDLCheck>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Console</SubSystem>
     </Link>
   </ItemDefinitionGroup>
@@ -122,8 +122,13 @@
     <ClCompile Include="Engine\Controller.cpp" />
     <ClCompile Include="Engine\GameManager.cpp" />
     <ClCompile Include="Engine\GameObject.cpp" />
+    <ClCompile Include="Engine\Renderer.cpp" />
+    <ClCompile Include="Engine\SolidRenderer.cpp" />
+    <ClCompile Include="Engine\TextRenderer.cpp" />
+    <ClCompile Include="Engine\TextureRenderer.cpp" />
     <ClCompile Include="Engine\Vector2d.cpp" />
     <ClCompile Include="FieldController.cpp" />
+    <ClCompile Include="GameController.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -134,9 +139,18 @@
     <ClInclude Include="Engine\ExplainedException.h" />
     <ClInclude Include="Engine\GameManager.h" />
     <ClInclude Include="Engine\GameObject.h" />
+    <ClInclude Include="Engine\Renderer.h" />
     <ClInclude Include="Engine\SceneFactory.h" />
+    <ClInclude Include="Engine\SolidRenderer.h" />
+    <ClInclude Include="Engine\TextRenderer.h" />
+    <ClInclude Include="Engine\TextureRenderer.h" />
     <ClInclude Include="Engine\Vector2d.h" />
     <ClInclude Include="FieldController.h" />
+    <ClInclude Include="GameController.h" />
+    <ClInclude Include="resource.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="DiamondsAndCrystals.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,6 +1,7 @@
 #pragma once
 #include "Engine\Controller.h"
 #include "CrystalController.h"
+#include "GameController.h"
 #include <memory>
 
 #define FIELD_SIZE_X 8
@@ -9,13 +10,14 @@
 
 using std::weak_ptr;
 class CrystalController;
+class GameController;
 
 class FieldController :
 	public Controller
 {
 public:
 	enum class States {
-		Idle, Swap, SwapBack, Fall
+		Paused,PauseDelay,Idle, Swap, SwapBack, Fall
 	};
 	FieldController();
 	virtual ~FieldController();
@@ -28,6 +30,10 @@ public:
 
 	weak_ptr<CrystalController> m_pickedCell;
 	int m_movingCrystals;
+	weak_ptr<GameController> m_gameController;
+
+	void StartNewGame();
+	void EndGame();
 protected:
 
 	void FsaIdleMouse(int cellX, int cellY);
@@ -36,6 +42,7 @@ protected:
 
 	void SwapCells(weak_ptr<CrystalController> cell1, weak_ptr<CrystalController> cell2);
 	int TestField();
+
 	States m_state;
 
 	weak_ptr<CrystalController> m_swapped1, m_swapped2;
