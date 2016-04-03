@@ -129,6 +129,7 @@
   <ItemGroup>
     <ClInclude Include="CrystalController.h" />
     <ClInclude Include="DacSceneFactory.h" />
+    <ClInclude Include="Engine\Constants.h" />
     <ClInclude Include="Engine\Controller.h" />
     <ClInclude Include="Engine\ExplainedException.h" />
     <ClInclude Include="Engine\GameManager.h" />

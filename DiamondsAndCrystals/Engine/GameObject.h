@@ -33,6 +33,9 @@ public:
 	void SetTexture(string assetName);
 	int Width();
 	int Height();
+	GameManager& Manager() { return m_manager; }
+
+	bool IsMouseInside();
 private:
 	GameObject(GameManager& manager);
 	GameObject(const char* name, float x, float y, int sizeX, int sizeY, GameManager& manager);

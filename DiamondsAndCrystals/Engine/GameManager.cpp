@@ -46,13 +46,23 @@ bool GameManager::Loop()
 	// SDL_GetTicks wraps after 49 days of running the game, but player will starve to death to that time
 	// I dont use timer events since this game contains only player-dependent actions
 	Uint32 timeDelta = SDL_GetTicks() - m_loopEndTime;
+	m_loopEndTime = SDL_GetTicks();
 
+	Uint32 mouseButtons = SDL_GetMouseState(&m_mouseX, &m_mouseY);
+
+	m_mouseLeft = MouseState(m_mouseLeft, mouseButtons & SDL_BUTTON(SDL_BUTTON_LEFT));
+	m_mouseRight = MouseState(m_mouseLeft, mouseButtons & SDL_BUTTON(SDL_BUTTON_RIGHT));
+	
 	while (SDL_PollEvent(&evnt) != 0)
 	{
-		if (evnt.type == SDL_QUIT)
+		switch (evnt.type)
 		{
+		case SDL_QUIT:
 			quit = true;
+			break;
+		
 		}
+		
 	}
 
 	SDL_RenderClear(m_renderer);
@@ -101,4 +111,12 @@ void GameManager::Deinit()
 	m_window = NULL;
 
 	SDL_Quit();
+}
+
+inline int GameManager::MouseState(int curFromGm, int curFromSdl)
+{
+	static int convTable[2][4] = { {0,3,3,0},{1,2,2,1} };
+	if (curFromSdl != 0)
+		curFromSdl = 1;
+	return convTable[curFromSdl][curFromGm];
 }

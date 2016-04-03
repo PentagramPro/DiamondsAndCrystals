@@ -18,3 +18,9 @@ GameObject * Controller::Object()
 
 	return m_owner._Get();
 }
+
+GameManager & Controller::Manager()
+{
+	
+	return Object()->Manager();
+}

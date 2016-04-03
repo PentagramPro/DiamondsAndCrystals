@@ -29,6 +29,11 @@ float Vector2d::Magnitude() const
 	return sqrtf(x*x + y*y);
 }
 
+float Vector2d::Distance(const Vector2d & v1, const Vector2d & v2)
+{
+	return sqrtf(pow((v2.x - v1.x), 2) + pow((v2.y - v1.y), 2));
+}
+
 
 
 Vector2d & Vector2d::operator+=(const Vector2d & v2)

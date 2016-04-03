@@ -5,6 +5,8 @@
 
 
 
+
+
 GameObject::GameObject(GameManager& manager) : m_manager(manager),
 	m_name("GameObject"), m_localPosition(0, 0), m_globalPosition(0, 0)
 {
@@ -32,11 +34,16 @@ GameObject::~GameObject()
 
 void GameObject::Update(Uint32 timeDelta)
 {
-	if (m_parent != NULL)
-		m_globalPosition = m_localPosition + m_parent->m_globalPosition;
+	
+
+	if (m_controller.get() != NULL)
+		m_controller->Update(timeDelta);
 
 	for (auto& item : m_children)
 		item->Update(timeDelta);
+
+	if (m_parent != NULL)
+		m_globalPosition = m_localPosition + m_parent->m_globalPosition;
 
 	m_rect.x = roundf(m_globalPosition.x);
 	m_rect.y = roundf(m_globalPosition.y);
@@ -76,6 +83,13 @@ int GameObject::Width()
 int GameObject::Height()
 {
 	return m_rect.h;
+}
+
+bool GameObject::IsMouseInside()
+{
+	return (m_manager.m_mouseX > m_rect.x && m_manager.m_mouseX<m_rect.x + m_rect.w) &&
+		(m_manager.m_mouseY>m_rect.y && m_manager.m_mouseY < m_rect.y + m_rect.h);
+
 }
 
 GameObject & GameObject::CreateObject(const char* name, float x, float y, const char* textureAsset, shared_ptr<Controller> controller)

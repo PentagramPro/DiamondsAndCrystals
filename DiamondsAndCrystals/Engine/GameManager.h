@@ -10,6 +10,7 @@
 
 #include "GameObject.h"
 #include "SceneFactory.h"
+#include "Constants.h"
 
 using std::unordered_map;
 using std::string;
@@ -37,6 +38,9 @@ public:
 
 	SDL_Texture* LoadTexture(string assetName);
 	SDL_Renderer* GetRenderer();
+
+	int m_mouseX, m_mouseY;
+	int m_mouseLeft, m_mouseRight;
 private:
 	void Deinit();
 
@@ -47,5 +51,7 @@ private:
 	Uint32 m_loopEndTime;
 	SceneFactory& m_sceneFactory;
 	unordered_map<string, SDL_Texture*> m_textures;
+
+	inline int MouseState(int curFromGm, int curFromSdl);
 };
 

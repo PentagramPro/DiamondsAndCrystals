@@ -9,6 +9,7 @@ public:
 
 	float Normalize();
 	float Magnitude() const;
+	static float Distance(const Vector2d& v1, const Vector2d& v2);
 
 	Vector2d& operator+= (const Vector2d& v2);
 	Vector2d& operator-= (const Vector2d& v2);
