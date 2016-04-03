@@ -60,19 +60,40 @@ shared_ptr<GameObject> GameObject::GetSharedPtr()
 	return shared_from_this();
 }
 
-GameObject & GameObject::CreateObject(const char* name, float x, float y, const char* textureAsset, Controller* controller)
+void GameObject::SetTexture(string assetName)
+{
+	m_texture = m_manager.LoadTexture(assetName);
+	SDL_QueryTexture(m_texture, NULL, NULL, &m_rect.w, &m_rect.h);
+
+}
+
+int GameObject::Width()
+{
+	
+	return m_rect.w;
+}
+
+int GameObject::Height()
+{
+	return m_rect.h;
+}
+
+GameObject & GameObject::CreateObject(const char* name, float x, float y, const char* textureAsset, shared_ptr<Controller> controller)
 {
 	shared_ptr<GameObject> res(new GameObject(name, x, y, 0, 0, m_manager));
 	
 	if (controller != NULL)
-		controller->m_owner = GetSharedPtr();
-	res->m_controller.reset(controller);
-	if(textureAsset!=NULL)
-		res->m_texture = m_manager.LoadTexture(textureAsset);
+	{
+		controller->m_owner = res;
+		controller->Init();
+	}
+	res->m_controller=controller;
+	if (textureAsset != NULL)
+		res->SetTexture(textureAsset);
 	res->m_parent = GetSharedPtr();
-	SDL_QueryTexture(res->m_texture, NULL, NULL, &res->m_rect.w, &res->m_rect.h);
-
+	
 	m_children.push_back(res);
+	
 
 	return *res;
 }

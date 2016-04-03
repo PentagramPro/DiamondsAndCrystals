@@ -25,12 +25,14 @@ public:
 	void Update(Uint32 timeDelta);
 	void Render();
 
-	GameObject& CreateObject(const char* name, float x, float y, const char* textureAsset, Controller* controller);
+	GameObject& CreateObject(const char* name, float x, float y, const char* textureAsset, shared_ptr<Controller>  controller);
 	
 	Vector2d m_localPosition;
 
 	shared_ptr<GameObject> GetSharedPtr();
-
+	void SetTexture(string assetName);
+	int Width();
+	int Height();
 private:
 	GameObject(GameManager& manager);
 	GameObject(const char* name, float x, float y, int sizeX, int sizeY, GameManager& manager);

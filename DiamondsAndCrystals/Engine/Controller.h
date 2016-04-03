@@ -4,9 +4,10 @@
 #include "GameObject.h"
 
 using std::weak_ptr;
+using std::shared_ptr;
 class GameObject;
 
-class Controller
+class Controller : public std::enable_shared_from_this<Controller>
 {
 	
 public:
@@ -17,5 +18,9 @@ public:
 	virtual void Update() = 0;
 
 	weak_ptr<GameObject> m_owner;
+	shared_ptr<Controller> GetSharedPtr() { return shared_from_this(); }
+
+protected:
+	GameObject* Object();
 };
 
