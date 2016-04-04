@@ -2,6 +2,7 @@
 #include "Engine\Controller.h"
 #include "CrystalController.h"
 #include "GameController.h"
+#include "FuseController.h"
 #include <memory>
 
 #define FIELD_SIZE_X 8
@@ -32,6 +33,7 @@ public:
 	weak_ptr<CrystalController> m_pickedCell;
 	int m_movingCrystals;
 	weak_ptr<GameController> m_gameController;
+	weak_ptr<FuseController> m_fuse;
 
 	void StartNewGame();
 	void EndGame();

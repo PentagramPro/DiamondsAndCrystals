@@ -63,6 +63,9 @@
     <ClCompile Include="ParticlesController.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="FuseController.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Controller.h">
@@ -114,6 +117,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ParticlesController.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FuseController.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

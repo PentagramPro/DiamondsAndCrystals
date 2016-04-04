@@ -4,10 +4,13 @@
 #include <memory>
 
 #include "FieldController.h"
+#include "ParticlesController.h"
+
 using std::weak_ptr;
 
 #define SCORE_PER_CELL 10
 #define TIME_LIMIT 60
+#define EXPLOSION_TIME 2
 class FieldController;
 
 class GameController :
@@ -27,8 +30,9 @@ public:
 	weak_ptr<GameObject> m_menu;
 	weak_ptr<FieldController> m_field;
 	weak_ptr<TextRenderer> m_timerText;
+	weak_ptr<ParticlesController> m_bigBoom;
 protected:
-	enum class States{Menu,Game};
+	enum class States{Menu,Game,Explosion};
 	States m_state;
 	int m_score;
 	int m_time;

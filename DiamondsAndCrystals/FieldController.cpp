@@ -19,7 +19,8 @@ FieldController::~FieldController()
 void FieldController::Init()
 {
 	m_state = States::Paused;
-	
+	m_fuse.lock()->Object()->SetEnabled(false);
+
 	for (int cellX = 0; cellX < FIELD_SIZE_X; cellX++)
 	{
 		for (int cellY = 0; cellY < FIELD_SIZE_Y; cellY++)
@@ -104,13 +105,15 @@ void FieldController::StartNewGame()
 			crystal->Object()->m_localPosition = crystal->Origin();
 		}
 	}
-
+	m_fuse.lock()->Object()->SetEnabled(true);
+	m_fuse.lock()->Reset();
 
 	m_state = States::PauseDelay;
 }
 
 void FieldController::EndGame()
 {
+	m_fuse.lock()->Object()->SetEnabled(false);
 	m_state = States::Paused;
 }
 

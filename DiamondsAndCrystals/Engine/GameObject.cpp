@@ -38,7 +38,7 @@ void GameObject::RemoveChild(shared_ptr<GameObject> child)
 	{
 		if (it->get() == child.get())
 		{
-			printf("Removed object %s\n", (*it)->m_name.c_str());
+			//printf("Removed object %s\n", (*it)->m_name.c_str());
 			m_children.erase(it);
 			break;
 		}

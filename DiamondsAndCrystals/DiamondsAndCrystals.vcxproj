@@ -128,6 +128,7 @@
     <ClCompile Include="Engine\TextureRenderer.cpp" />
     <ClCompile Include="Engine\Vector2d.cpp" />
     <ClCompile Include="FieldController.cpp" />
+    <ClCompile Include="FuseController.cpp" />
     <ClCompile Include="GameController.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ParticlesController.cpp" />
@@ -147,6 +148,7 @@
     <ClInclude Include="Engine\TextureRenderer.h" />
     <ClInclude Include="Engine\Vector2d.h" />
     <ClInclude Include="FieldController.h" />
+    <ClInclude Include="FuseController.h" />
     <ClInclude Include="GameController.h" />
     <ClInclude Include="ParticlesController.h" />
     <ClInclude Include="resource.h" />

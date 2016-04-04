@@ -3,9 +3,11 @@
 #include "Engine\GameObject.h"
 #include <memory>
 #include <list>
+#include <string>
 
 using std::weak_ptr;
 using std::list;
+using std::string;
 
 struct Particle {
 	Vector2d velocity;
@@ -33,7 +35,13 @@ public:
 	int m_controllerLife;
 
 	int m_burstSize;
+	float m_spawnRate;
+	string m_assetName;
+	void Burst(int size);
 protected:
 	list<Particle> m_particles;
+	float m_spawnCapacitor;
+
+	void SpawnParticle();
 };
 
