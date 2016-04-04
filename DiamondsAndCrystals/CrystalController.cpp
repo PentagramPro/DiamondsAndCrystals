@@ -51,6 +51,17 @@ void CrystalController::RandomizeColor()
 	Object()->SetTexture(m_colors[m_color]);
 }
 
+void CrystalController::SetColorAndPos(int color)
+{
+	if (color < 0)
+		color = 0;
+	if (color >= COLORS)
+		color = COLORS - 1;
+
+	m_color = color;
+	Object()->m_localPosition = Origin();
+}
+
 Vector2d CrystalController::Origin()
 {
 	return Vector2d(CRYSTAL_SIZE*m_cellX, CRYSTAL_SIZE*m_cellY);

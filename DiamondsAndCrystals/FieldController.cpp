@@ -1,6 +1,7 @@
 #include "FieldController.h"
 #include "Engine\Constants.h"
 #include "CrystalController.h"
+#include "ParticlesController.h"
 
 #include <unordered_set>
 
@@ -35,6 +36,12 @@ void FieldController::Init()
 			
 		}
 	}
+
+	GameObject& glow = Object()->CreateObject("Glow", 0, 0, "Glow.png", NULL);
+	glow.SetBlendingMode(SDL_BLENDMODE_ADD);
+	m_glow = glow.GetSharedPtr();
+	glow.SetEnabled(false);
+
 }
 
 void FieldController::Update(Uint32 timeDelta)
@@ -75,14 +82,30 @@ void FieldController::Update(Uint32 timeDelta)
 
 	m_movingCrystals = 0;
 
-
-	
-
-	
 }
 
 void FieldController::StartNewGame()
 {
+	for (int cellX = 0; cellX < FIELD_SIZE_X; cellX++)
+	{
+		for (int cellY = 0; cellY < FIELD_SIZE_Y; cellY++)
+		{		
+			auto crystal = m_cells[cellY][cellX].lock();
+			crystal->RandomizeColor();
+		}
+	}
+
+	while (TestField(false) > 0) {}
+	for (int cellX = 0; cellX < FIELD_SIZE_X; cellX++)
+	{
+		for (int cellY = 0; cellY < FIELD_SIZE_Y; cellY++)
+		{
+			auto crystal = m_cells[cellY][cellX].lock();
+			crystal->Object()->m_localPosition = crystal->Origin();
+		}
+	}
+
+
 	m_state = States::PauseDelay;
 }
 
@@ -95,6 +118,10 @@ void FieldController::FsaIdleMouse(int cellX, int cellY)
 {
 	Vector2d mp(Manager().m_mouseX, Manager().m_mouseY);
 	Vector2d gesture = mp - Manager().m_mouseLeftDownPoint;
+	if (Manager().m_mouseLeft == MB_DOWN)
+	{
+		SetGlowPos(cellX, cellY);
+	}
 
 	if (Manager().m_mouseLeft != MB_NONE && gesture.Magnitude() > DRAG_DISTANCE)
 	{
@@ -110,13 +137,6 @@ void FieldController::FsaIdleMouse(int cellX, int cellY)
 	else if (Manager().m_mouseLeft == MB_UP && gesture.Magnitude()<DRAG_DISTANCE)
 	{
 		auto picked = m_pickedCell.lock();
-
-		
-
-		//if (gesture.Magnitude() < DRAG_DISTANCE)
-		//{
-			// We deem that user tried to click on crystals
-
 			
 		if (picked &&Adjacent(cellX,cellY,picked->m_cellX, picked->m_cellY))
 		{
@@ -130,20 +150,12 @@ void FieldController::FsaIdleMouse(int cellX, int cellY)
 			printf("picked cell x:%d y:%d\n", cellX, cellY);
 		}
 
-		//}
-
-		/*else
-		{
-
-			float angle = atan2f(gesture.y, gesture.x)*180/M_PI;
-			if(angle<45 && angle>-45)
-		}*/
 	}
 }
 
 void FieldController::FsaSwapped()
 {
-	int removed = TestField();
+	int removed = TestField(true);
 	if (removed > 0)
 	{
 		m_state = States::Fall;
@@ -157,15 +169,31 @@ void FieldController::FsaSwapped()
 
 void FieldController::FsaFallStopped()
 {
-	int removed = TestField();
+	int removed = TestField(true);
 	if (removed == 0)
 	{
 		m_state = States::Idle;
 	}
 }
 
+void FieldController::SetGlowPos(int cellX, int cellY)
+{
+	auto glow = m_glow.lock();
+	glow->SetEnabled(true);
+	glow->m_localPosition.x = cellX*CRYSTAL_SIZE-(glow->Width()-CRYSTAL_SIZE)/2;
+	glow->m_localPosition.y = cellY*CRYSTAL_SIZE-(glow->Height() - CRYSTAL_SIZE) / 2;
+}
+
+void FieldController::Explode(int cellX, int cellY)
+{
+	auto fx = std::make_shared<ParticlesController>();
+
+	Object()->CreateObject("Explosion", (cellX+0.5)*CRYSTAL_SIZE, (cellY + 0.5)*CRYSTAL_SIZE, NULL, fx);
+}
+
 void FieldController::SwapCells(weak_ptr<CrystalController> wcell1, weak_ptr<CrystalController> wcell2)
 {
+	m_glow.lock()->SetEnabled(false);
 	m_swapped1 = wcell1;
 	m_swapped2 = wcell2;
 
@@ -184,16 +212,13 @@ void FieldController::SwapCells(weak_ptr<CrystalController> wcell1, weak_ptr<Cry
 	cell2->m_cellX = x;
 	cell2->m_cellY = y;
 
-	//cell1->Object()->m_localPosition = cell1->Origin();
-	//cell2->Object()->m_localPosition = cell2->Origin();
 
 	m_cells[cell1->m_cellY][cell1->m_cellX] = wcell1;
 	m_cells[cell2->m_cellY][cell2->m_cellX] = wcell2;
 
-	//TestField();
 }
 
-int FieldController::TestField()
+int FieldController::TestField(bool createFx)
 {
 	unordered_set<shared_ptr<CrystalController>> toRemove;
 
@@ -221,6 +246,7 @@ int FieldController::TestField()
 			if (pos - cellX >= 2)
 				while (pos >= cellX)
 					toRemove.insert(m_cells[cellY][pos--].lock());
+				
 
 			pos = cellY;
 			while (++pos < FIELD_SIZE_Y)
@@ -237,11 +263,18 @@ int FieldController::TestField()
 			if (pos - cellY >= 2)
 				while (pos >= cellY)
 					toRemove.insert(m_cells[pos--][cellX].lock());
+				
 
 		}
 	}
 
-
+	if (createFx)
+	{
+		for (auto& i : toRemove)
+		{
+			Explode(i->m_cellX, i->m_cellY);
+		}
+	}
 	// collecting all remaining crystals at the bottom
 	int fallCount[FIELD_SIZE_X];
 	memset(fallCount, 0, sizeof(fallCount));

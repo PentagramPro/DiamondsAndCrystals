@@ -5,6 +5,7 @@
 #include <memory>
 #include <unordered_map>
 #include <map>
+#include <forward_list>
 #include <string>
 #include <SDL.h>
 #include <SDL_ttf.h>
@@ -19,6 +20,7 @@ using std::map;
 using std::string;
 using std::shared_ptr;
 using std::pair;
+using std::forward_list;
 
 class SceneFactory;
 
@@ -48,6 +50,8 @@ public:
 	int m_mouseX, m_mouseY;
 	int m_mouseLeft, m_mouseRight;
 	Vector2d m_mouseLeftDownPoint;
+
+	void AddObjectToRemove(shared_ptr<GameObject>  obj);
 private:
 	void Deinit();
 
@@ -59,7 +63,7 @@ private:
 	SceneFactory& m_sceneFactory;
 	unordered_map<string, SDL_Texture*> m_textures;
 	map<pair<string,int>, TTF_Font *> m_fonts;
-
+	forward_list<shared_ptr<GameObject>> m_toRemove;
 	inline int MouseState(int curFromGm, int curFromSdl);
 };
 

@@ -15,6 +15,8 @@ GameManager::~GameManager()
 
 void GameManager::Init()
 {
+	srand(10);
+
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
 		throw GameManagerException("SDL_Init returned error: ", SDL_GetError());
 	
@@ -48,7 +50,6 @@ bool GameManager::Loop()
 	SDL_Event evnt;
 
 	// SDL_GetTicks wraps after 49 days of running the game, but player will starve to death to that time
-	// I dont use timer events since this game contains only player-dependent actions
 	Uint32 timeDelta = SDL_GetTicks() - m_loopEndTime;
 	m_loopEndTime = SDL_GetTicks();
 
@@ -82,6 +83,18 @@ bool GameManager::Loop()
 	m_sceneRoot->Render();
 
 	SDL_RenderPresent(m_renderer);
+
+	// removing all objects that are scheduled to it
+	
+	forward_list<shared_ptr<GameObject>>::iterator it = m_toRemove.begin();
+	while (it != m_toRemove.end())
+	{
+		(*it)->m_parent->RemoveChild(*it);
+		(*it)->RemoveObject();
+		
+		it++;
+	}
+	m_toRemove.clear();
 
 	return quit;
 }
@@ -123,6 +136,11 @@ TTF_Font * GameManager::LoadFont(string assetName, int size)
 SDL_Renderer * GameManager::GetRenderer()
 {
 	return m_renderer;
+}
+
+void GameManager::AddObjectToRemove(shared_ptr<GameObject> obj)
+{
+	m_toRemove.push_front(obj);
 }
 
 void GameManager::Deinit()

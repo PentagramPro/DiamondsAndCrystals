@@ -41,13 +41,19 @@ protected:
 	void FsaSwapped();
 	void FsaFallStopped();
 
+	void SetGlowPos(int cellX, int cellY);
+	void Explode(int cellX, int cellY);
 	void SwapCells(weak_ptr<CrystalController> cell1, weak_ptr<CrystalController> cell2);
-	int TestField();
+	int TestField(bool createFx);
 	inline bool Adjacent(int x1, int y1, int x2, int y2);
 
 	States m_state;
 	
+	// stores swapped crystals for swapping them back in case they don't give
+	// disappering rows/cols
 	weak_ptr<CrystalController> m_swapped1, m_swapped2;
 
+	weak_ptr<GameObject> m_glow;
+	
 };
 

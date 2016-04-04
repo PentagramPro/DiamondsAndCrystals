@@ -23,6 +23,8 @@ public:
 	virtual void Init();
 	virtual void Update(Uint32 timeDelta);
 	void RandomizeColor();
+	
+	void SetColorAndPos(int color);
 
 	int m_cellX, m_cellY;
 	weak_ptr<FieldController> m_field;

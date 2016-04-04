@@ -130,6 +130,7 @@
     <ClCompile Include="FieldController.cpp" />
     <ClCompile Include="GameController.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="ParticlesController.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CrystalController.h" />
@@ -147,6 +148,7 @@
     <ClInclude Include="Engine\Vector2d.h" />
     <ClInclude Include="FieldController.h" />
     <ClInclude Include="GameController.h" />
+    <ClInclude Include="ParticlesController.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>

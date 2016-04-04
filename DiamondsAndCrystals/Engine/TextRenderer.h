@@ -12,7 +12,7 @@ public:
 	TextRenderer(SDL_Renderer* renderer);
 	virtual ~TextRenderer();
 
-	virtual void Render(SDL_Renderer* renderer, SDL_Rect* rect);
+	virtual void Render(SDL_Renderer* renderer, SDL_Rect* rect, float a);
 	void SetFont(TTF_Font* font, SDL_Color color);
 	void SetText(const char* text);
 protected:

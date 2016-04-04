@@ -12,7 +12,7 @@ TextRenderer::~TextRenderer()
 	Free();
 }
 
-void TextRenderer::Render(SDL_Renderer* renderer, SDL_Rect* rect)
+void TextRenderer::Render(SDL_Renderer* renderer, SDL_Rect* rect, float a)
 {
 	if (m_texture != NULL)
 	{
@@ -21,6 +21,8 @@ void TextRenderer::Render(SDL_Renderer* renderer, SDL_Rect* rect)
 		target.y = rect->y;
 		target.w = m_width;
 		target.h = m_height;
+		Uint8 modA = 255.0*a;
+		SDL_SetTextureAlphaMod(m_texture, modA);
 		SDL_RenderCopy(m_renderer, m_texture, NULL, &target);
 	}
 }
