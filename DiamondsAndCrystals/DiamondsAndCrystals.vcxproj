@@ -101,6 +101,7 @@
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -131,6 +132,7 @@
     <ClCompile Include="FuseController.cpp" />
     <ClCompile Include="GameController.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MouseHoverController.cpp" />
     <ClCompile Include="ParticlesController.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -150,6 +152,7 @@
     <ClInclude Include="FieldController.h" />
     <ClInclude Include="FuseController.h" />
     <ClInclude Include="GameController.h" />
+    <ClInclude Include="MouseHoverController.h" />
     <ClInclude Include="ParticlesController.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>

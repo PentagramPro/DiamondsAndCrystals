@@ -60,8 +60,8 @@ bool GameManager::Loop()
 	
 	if (m_mouseLeft == MB_DOWN)
 	{
-		m_mouseLeftDownPoint.x = m_mouseX;
-		m_mouseLeftDownPoint.y = m_mouseY;
+		m_mouseLeftDownPoint.x = (float)m_mouseX;
+		m_mouseLeftDownPoint.y = (float)m_mouseY;
 	}
 	
 

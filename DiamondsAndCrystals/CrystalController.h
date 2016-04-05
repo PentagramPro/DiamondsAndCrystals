@@ -6,8 +6,8 @@
 
 #define COLORS 5
 #define CRYSTAL_SIZE 42
-#define FALL_SPEED 100.0
-#define FALL_ACC 600.0
+#define FALL_SPEED 100.0f
+#define FALL_ACC 600.0f
 
 using std::string;
 class FieldController;

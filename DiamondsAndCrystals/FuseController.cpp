@@ -33,7 +33,7 @@ void FuseController::Update(Uint32 timeDelta)
 	if (m_totalLength <= 0)
 		return;
 
-	float delta = timeDelta / 1000.0;
+	float delta = timeDelta / 1000.0f;
 
 	m_timeElapsed += delta;
 	if (m_timeElapsed > m_burnTime)
@@ -42,7 +42,7 @@ void FuseController::Update(Uint32 timeDelta)
 	float phase = m_timeElapsed / m_burnTime;
 	float phaseLen = m_totalLength*phase;
 
-	int index = 0;
+	unsigned int index = 0;
 	float indexLen = 0;
 	for (auto& i : m_indexes)
 	{
@@ -71,7 +71,7 @@ void FuseController::Reset()
 		return;
 
 
-	for (int i = 1; i < m_points.size(); i++)
+	for (unsigned int i = 1; i < m_points.size(); i++)
 	{
 		float len = Vector2d::Distance(m_points[i], m_points[i - 1]);
 		m_totalLength += len;

@@ -15,7 +15,7 @@ void TextureRenderer::Render(SDL_Renderer* renderer, SDL_Rect* rect, float a)
 {
 	if (m_texture != NULL)
 	{
-		Uint8 modA = 255.0*a;
+		Uint8 modA = (Uint8)(255.0*a);
 		SDL_SetTextureAlphaMod(m_texture, modA);
 		SDL_RenderCopy(renderer, m_texture, NULL, rect);
 	}

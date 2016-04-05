@@ -9,7 +9,7 @@ ParticlesController::ParticlesController()
 	m_acceleration = 20;
 	m_burstSize = 15;
 	m_velocity = 40;
-	m_velocityNoise = 0.8;
+	m_velocityNoise = 0.8f;
 	m_spawnRate = 0;
 	m_assetName = "Particle.png";
 }
@@ -39,17 +39,17 @@ void ParticlesController::Burst(int size)
 void ParticlesController::SpawnParticle()
 {
 	GameObject& obj = Object()->CreateObject("Particle", 0, 0, m_assetName.c_str(), NULL);
-	obj.m_localPosition.x = -obj.Width() / 2;
-	obj.m_localPosition.y = -obj.Height() / 2;
+	obj.m_localPosition.x = -obj.Width() / 2.0f;
+	obj.m_localPosition.y = -obj.Height() / 2.0f;
 	obj.SetBlendingMode(SDL_BLENDMODE_ADD);
 	Particle p;
 	p.object = obj.GetSharedPtr();
 	p.life = m_life;
 
-	float velNoiseRate = (rand() / (float)RAND_MAX - 0.5)*m_velocityNoise;
+	float velNoiseRate = (rand() / (float)RAND_MAX - 0.5f)*m_velocityNoise;
 
-	p.velocity.x = rand() / (float)RAND_MAX - 0.5;
-	p.velocity.y = rand() / (float)RAND_MAX - 0.5;
+	p.velocity.x = rand() / (float)RAND_MAX - 0.5f;
+	p.velocity.y = rand() / (float)RAND_MAX - 0.5f;
 	p.velocity.Normalize();
 	p.velocity *= m_velocity*(1 + velNoiseRate);
 	m_particles.push_back(p);
@@ -59,7 +59,7 @@ void ParticlesController::Update(Uint32 timeDelta)
 {
 	if (m_controllerLife >= 0)
 	{
-		if (m_controllerLife < timeDelta)
+		if (m_controllerLife < (int)timeDelta)
 		{
 			Object()->Destroy();
 			return;
@@ -67,7 +67,7 @@ void ParticlesController::Update(Uint32 timeDelta)
 		m_controllerLife -= timeDelta;
 	}
 	
-	float fraction = timeDelta / 1000.0;
+	float fraction = timeDelta / 1000.0f;
 	
 	list<Particle>::iterator it = m_particles.begin();
 	while(it!=m_particles.end())

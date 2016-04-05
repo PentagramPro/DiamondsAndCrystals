@@ -6,8 +6,12 @@
 #include "GameController.h"
 #include "FuseController.h"
 #include "ParticlesController.h"
+#include "MouseHoverController.h"
 
 #include <memory>
+
+using std::make_shared;
+
 DacSceneFactory::DacSceneFactory()
 {
 }
@@ -20,11 +24,11 @@ DacSceneFactory::~DacSceneFactory()
 void DacSceneFactory::CreateScene(GameManager & manager, GameObject & root)
 {
 	// Game
-	auto gameController = std::make_shared<GameController>();
+	auto gameController = make_shared<GameController>();
 	GameObject& bg = root.CreateObject("Background", 0, 0, "BackGround.jpg",gameController );
 
 	// Fuse
-	auto fuseController = std::make_shared<FuseController>();
+	auto fuseController = make_shared<FuseController>();
 	fuseController->m_burnTime = TIME_LIMIT;
 	fuseController->m_points.push_back(Vector2d(0, 0));
 	fuseController->m_points.push_back(Vector2d(-12, -20));
@@ -36,20 +40,20 @@ void DacSceneFactory::CreateScene(GameManager & manager, GameObject & root)
 	GameObject& fuse = bg.CreateObject("Fuse", 263, 555, NULL, fuseController);
 
 	// Big Explosion
-	auto bigBoomController = std::make_shared<ParticlesController>();
+	auto bigBoomController = make_shared<ParticlesController>();
 	bigBoomController->m_controllerLife = -1;
 	bigBoomController->m_assetName = "Explosion.png";
 	bigBoomController->m_burstSize = 0;
 	bigBoomController->m_velocity = 400;
 	bigBoomController->m_acceleration = -200;
 	bigBoomController->m_life = 3000;
-	bigBoomController->m_velocityNoise = 0.8;
+	bigBoomController->m_velocityNoise = 0.8f;
 	GameObject& bigBoom = bg.CreateObject("BigBoom", 129, 329, NULL, bigBoomController);
 	gameController->m_bigBoom = bigBoomController;
 
 
 	// Field
-	auto fieldController = std::make_shared<FieldController>();
+	auto fieldController = make_shared<FieldController>();
 	fieldController->m_gameController = gameController;
 	fieldController->m_fuse = fuseController;
 	GameObject& field = bg.CreateObject("Field", 330, 107, NULL, fieldController );
@@ -92,7 +96,8 @@ void DacSceneFactory::CreateScene(GameManager & manager, GameObject & root)
 	// Button
 	solid = new SolidRenderer();
 	solid->SetColor(0xe0, 0xa0, 0x20, 0xff);
-	GameObject& startBtn = menu.CreateObject("StartButton", 280, 400, 200, 100, shared_ptr<SolidRenderer>(solid), NULL);
+	GameObject& startBtn = menu.CreateObject("StartButton", 280, 400, 200, 100, 
+		shared_ptr<SolidRenderer>(solid), make_shared<MouseHoverController>());
 	gameController->m_btnStart = startBtn.GetSharedPtr();
 
 	// Button text

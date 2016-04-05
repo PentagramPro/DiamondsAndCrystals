@@ -80,8 +80,8 @@ void GameObject::Update(Uint32 timeDelta)
 	if (m_parent != NULL)
 		m_globalPosition = m_localPosition + m_parent->m_globalPosition;
 
-	m_rect.x = roundf(m_globalPosition.x);
-	m_rect.y = roundf(m_globalPosition.y);
+	m_rect.x = (int)roundf(m_globalPosition.x);
+	m_rect.y = (int)roundf(m_globalPosition.y);
 }
 
 void GameObject::Render()

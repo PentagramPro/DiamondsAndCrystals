@@ -30,8 +30,8 @@ void CrystalController::Update(Uint32 timeDelta)
 	if ( dist > 0.1)
 	{
 		shift.Normalize();
-		shift *= (m_fallSpeed*((float)timeDelta) / 1000.0);
-		m_fallSpeed += FALL_ACC*(float)timeDelta/1000.0;
+		shift *= (m_fallSpeed*((float)timeDelta) / 1000.0f);
+		m_fallSpeed += FALL_ACC*(float)timeDelta/1000.0f;
 
 		if (shift.Magnitude() > dist)
 			Object()->m_localPosition = origin;
@@ -64,7 +64,7 @@ void CrystalController::SetColorAndPos(int color)
 
 Vector2d CrystalController::Origin()
 {
-	return Vector2d(CRYSTAL_SIZE*m_cellX, CRYSTAL_SIZE*m_cellY);
+	return Vector2d((float)(CRYSTAL_SIZE*m_cellX), (float)(CRYSTAL_SIZE*m_cellY));
 }
 
 bool CrystalController::IsSame(weak_ptr<CrystalController> cell)

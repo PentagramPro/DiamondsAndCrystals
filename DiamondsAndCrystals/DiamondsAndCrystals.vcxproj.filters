@@ -66,6 +66,9 @@
     <ClCompile Include="FuseController.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="MouseHoverController.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Controller.h">
@@ -79,9 +82,6 @@
     </ClInclude>
     <ClInclude Include="Engine\Vector2d.h">
       <Filter>Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\SceneFactory.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Engine\ExplainedException.h">
       <Filter>Engine</Filter>
@@ -120,6 +120,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="FuseController.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\SceneFactory.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="MouseHoverController.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

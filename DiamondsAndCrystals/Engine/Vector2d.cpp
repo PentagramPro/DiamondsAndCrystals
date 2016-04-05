@@ -31,7 +31,8 @@ float Vector2d::Magnitude() const
 
 float Vector2d::Distance(const Vector2d & v1, const Vector2d & v2)
 {
-	return sqrtf(pow((v2.x - v1.x), 2) + pow((v2.y - v1.y), 2));
+	//return sqrtf(pow((v2.x - v1.x), 2) + pow((v2.y - v1.y), 2));
+	return (v2.x - v1.x)*(v2.x - v1.x) + (v2.y - v1.y)*(v2.y - v1.y);
 }
 
 

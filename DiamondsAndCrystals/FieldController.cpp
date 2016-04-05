@@ -47,10 +47,10 @@ void FieldController::Init()
 
 void FieldController::Update(Uint32 timeDelta)
 {
-	int cellX = (Manager().m_mouseX - Object()->m_localPosition.x) / CRYSTAL_SIZE;
-	int cellY = (Manager().m_mouseY - Object()->m_localPosition.y) / CRYSTAL_SIZE;
+	int cellX = (int)( (Manager().m_mouseX - Object()->m_localPosition.x) / CRYSTAL_SIZE );
+	int cellY = (int)( (Manager().m_mouseY - Object()->m_localPosition.y) / CRYSTAL_SIZE );
 
-	Vector2d mp(Manager().m_mouseX, Manager().m_mouseY);
+	Vector2d mp((float)Manager().m_mouseX, (float)Manager().m_mouseY);
 	
 	
 
@@ -119,7 +119,7 @@ void FieldController::EndGame()
 
 void FieldController::FsaIdleMouse(int cellX, int cellY)
 {
-	Vector2d mp(Manager().m_mouseX, Manager().m_mouseY);
+	Vector2d mp((float)Manager().m_mouseX, (float)Manager().m_mouseY);
 	Vector2d gesture = mp - Manager().m_mouseLeftDownPoint;
 	if (Manager().m_mouseLeft == MB_DOWN)
 	{
@@ -128,8 +128,8 @@ void FieldController::FsaIdleMouse(int cellX, int cellY)
 
 	if (Manager().m_mouseLeft != MB_NONE && gesture.Magnitude() > DRAG_DISTANCE)
 	{
-		int cellXOld = (Manager().m_mouseLeftDownPoint.x - Object()->m_localPosition.x) / CRYSTAL_SIZE;
-		int cellYOld = (Manager().m_mouseLeftDownPoint.y - Object()->m_localPosition.y) / CRYSTAL_SIZE;
+		int cellXOld = (int)( (Manager().m_mouseLeftDownPoint.x - Object()->m_localPosition.x) / CRYSTAL_SIZE );
+		int cellYOld = (int)( (Manager().m_mouseLeftDownPoint.y - Object()->m_localPosition.y) / CRYSTAL_SIZE );
 		if (Adjacent(cellX, cellY, cellXOld, cellYOld))
 		{
 			SwapCells(m_cells[cellY][cellX], m_cells[cellYOld][cellXOld]);
@@ -183,15 +183,15 @@ void FieldController::SetGlowPos(int cellX, int cellY)
 {
 	auto glow = m_glow.lock();
 	glow->SetEnabled(true);
-	glow->m_localPosition.x = cellX*CRYSTAL_SIZE-(glow->Width()-CRYSTAL_SIZE)/2;
-	glow->m_localPosition.y = cellY*CRYSTAL_SIZE-(glow->Height() - CRYSTAL_SIZE) / 2;
+	glow->m_localPosition.x = cellX*CRYSTAL_SIZE-(glow->Width()-CRYSTAL_SIZE)/2.0f;
+	glow->m_localPosition.y = cellY*CRYSTAL_SIZE-(glow->Height() - CRYSTAL_SIZE) / 2.0f;
 }
 
 void FieldController::Explode(int cellX, int cellY)
 {
 	auto fx = std::make_shared<ParticlesController>();
 
-	Object()->CreateObject("Explosion", (cellX+0.5)*CRYSTAL_SIZE, (cellY + 0.5)*CRYSTAL_SIZE, NULL, fx);
+	Object()->CreateObject("Explosion", (cellX+0.5f)*CRYSTAL_SIZE, (cellY + 0.5f)*CRYSTAL_SIZE, NULL, fx);
 }
 
 void FieldController::SwapCells(weak_ptr<CrystalController> wcell1, weak_ptr<CrystalController> wcell2)
@@ -221,7 +221,7 @@ void FieldController::SwapCells(weak_ptr<CrystalController> wcell1, weak_ptr<Cry
 
 }
 
-int FieldController::TestField(bool createFx)
+int FieldController::TestField(bool gameStarted)
 {
 	unordered_set<shared_ptr<CrystalController>> toRemove;
 
@@ -271,7 +271,7 @@ int FieldController::TestField(bool createFx)
 		}
 	}
 
-	if (createFx)
+	if (gameStarted)
 	{
 		for (auto& i : toRemove)
 		{
@@ -320,11 +320,11 @@ int FieldController::TestField(bool createFx)
 		{
 			auto cell = m_cells[cellY][cellX].lock();
 			cell->RandomizeColor();
-			cell->Object()->m_localPosition.y = -FALL_SHIFT - (count - cellY)*CRYSTAL_SIZE;
+			cell->Object()->m_localPosition.y = (float)( -FALL_SHIFT - (count - cellY)*CRYSTAL_SIZE);
 		}
 	}
-
-	m_gameController.lock()->AddScore(toRemove.size());
+	if(gameStarted)
+		m_gameController.lock()->AddScore(toRemove.size());
 	return toRemove.size();
 
 }
