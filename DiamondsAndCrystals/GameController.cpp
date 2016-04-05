@@ -2,7 +2,7 @@
 
 
 
-GameController::GameController() : m_score(0)
+GameController::GameController() : m_score(0), m_bestScore(0)
 {
 }
 
@@ -23,7 +23,8 @@ void GameController::Update(Uint32 timeDelta)
 		if (Manager().m_mouseLeft == MB_UP && m_btnStart.lock()->IsMouseInside())
 		{
 			m_time = 0;
-			m_state = States::Game;
+			m_score = 0;
+			m_state = States::WaitGame;
 			m_menu.lock()->SetEnabled(false);
 			m_field.lock()->StartNewGame();
 		}
@@ -47,13 +48,18 @@ void GameController::Update(Uint32 timeDelta)
 			m_timerText.lock()->SetText(buf);
 		}
 	}
-	else
+	else if(m_state==States::Explosion)
 	{
 		m_time += timeDelta;
 		int secondsLeft = EXPLOSION_TIME - m_time / 1000;
 		if (secondsLeft < 0)
 		{
 			m_state = States::Menu;
+			if (m_bestScore < m_score)
+				m_bestScore = m_score;
+			char buf[30];
+			snprintf(buf, sizeof(buf), "Best score: %06d", m_bestScore);
+			m_bestScoreText.lock()->SetText(buf);
 			m_menu.lock()->SetEnabled(true);
 		}
 	}
@@ -65,4 +71,9 @@ void GameController::AddScore(int cellsRemoved)
 	char buf[10];
 	snprintf(buf, sizeof(buf), "%06d", m_score);
 	m_scoreText.lock()->SetText(buf);
+}
+
+void GameController::StartTimer()
+{
+	m_state = States::Game;
 }

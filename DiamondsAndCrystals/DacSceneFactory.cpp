@@ -88,10 +88,19 @@ void DacSceneFactory::CreateScene(GameManager & manager, GameObject & root)
 	text->SetText("Diamonds&Crystals");
 	GameObject& headerText = menu.CreateObject("Header", 20, 30, 0, 0, shared_ptr<TextRenderer>(text), NULL);
 
+	// Sign text
 	text = new TextRenderer(manager.GetRenderer());
 	text->SetFont(manager.LoadFont("Digital.ttf", 30), { 0xff, 0xff,0xff,0xff });
 	text->SetText("by Maxim Machekhin");
 	GameObject& signText = menu.CreateObject("Sign", 30, 120, 0, 0, shared_ptr<TextRenderer>(text), NULL);
+
+	// Best score text
+	text = new TextRenderer(manager.GetRenderer());
+	auto bestScorePtr = shared_ptr<TextRenderer>(text);
+	text->SetFont(manager.LoadFont("Digital.ttf", 30), { 0xff, 0xff,0xff,0xff });
+	text->SetText("Best score: 000000");
+	GameObject& bestScore = menu.CreateObject("BestScore", 120, 230, 0, 0, bestScorePtr, NULL);
+	gameController->m_bestScoreText = bestScorePtr;
 
 	// Button
 	solid = new SolidRenderer();

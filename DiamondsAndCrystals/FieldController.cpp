@@ -57,7 +57,13 @@ void FieldController::Update(Uint32 timeDelta)
 	switch (m_state)
 	{
 	case States::PauseDelay:
-		m_state = States::Idle;
+		if (m_movingCrystals == 0)
+		{
+			m_fuse.lock()->Object()->SetEnabled(true);
+			m_fuse.lock()->Reset();
+			m_gameController.lock()->StartTimer();
+			m_state = States::Idle;
+		}
 		break;
 	case States::Idle:
 		if ((cellX >= 0 && cellY >= 0 && cellX < FIELD_SIZE_X && cellY < FIELD_SIZE_Y))
@@ -87,33 +93,60 @@ void FieldController::Update(Uint32 timeDelta)
 
 void FieldController::StartNewGame()
 {
+	Vector2d center(200, 400);
+
+	// this puts the cells on their right places
+	// and randomizes colors
 	for (int cellX = 0; cellX < FIELD_SIZE_X; cellX++)
 	{
 		for (int cellY = 0; cellY < FIELD_SIZE_Y; cellY++)
 		{		
 			auto crystal = m_cells[cellY][cellX].lock();
+			crystal->m_cellY = cellY;
+			crystal->m_cellX = cellX;
 			crystal->RandomizeColor();
+			
 		}
 	}
 
+	// we want to be sure that there are no triple crystals
 	while (TestField(false) > 0) {}
+
+	// Crystals should be moved away for a nice animation
 	for (int cellX = 0; cellX < FIELD_SIZE_X; cellX++)
 	{
 		for (int cellY = 0; cellY < FIELD_SIZE_Y; cellY++)
 		{
 			auto crystal = m_cells[cellY][cellX].lock();
-			crystal->Object()->m_localPosition = crystal->Origin();
+			//crystal->Object()->m_localPosition = crystal->Origin();
+			crystal->Object()->m_localPosition = crystal->Origin() * 4 - center * 3;
 		}
 	}
-	m_fuse.lock()->Object()->SetEnabled(true);
-	m_fuse.lock()->Reset();
-
+	
+	// FieldController switches PauseDelay state when m_movingCrystals==0
+	// But nothing moved yet
+	// We have to manually set this variable to something greater than zero in order
+	// to prevent next call to Update method from switching states.
+	m_movingCrystals = 1;
 	m_state = States::PauseDelay;
 }
 
 void FieldController::EndGame()
 {
 	m_fuse.lock()->Object()->SetEnabled(false);
+	Vector2d center(-100, 100);
+	// let crystals fall!
+	for (int cellX = 0; cellX < FIELD_SIZE_X; cellX++)
+	{
+		for (int cellY = 0; cellY < FIELD_SIZE_Y; cellY++)
+		{
+			auto crystal = m_cells[cellY][cellX].lock();
+
+			
+			crystal->m_cellY = FIELD_SIZE_Y*2;
+		}
+	}
+
 	m_state = States::Paused;
 }
 
