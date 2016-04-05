@@ -24,6 +24,7 @@ void GameController::Update(Uint32 timeDelta)
 		{
 			m_time = 0;
 			m_score = 0;
+			AddScore(0);
 			m_state = States::WaitGame;
 			m_menu.lock()->SetEnabled(false);
 			m_field.lock()->StartNewGame();
